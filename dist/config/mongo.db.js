@@ -18,7 +18,7 @@ require('dotenv').config();
 const MONGODB_URI = process.env.MONGODB_URI || '';
 const connectToDatabase = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield mongoose_1.default.connect(MONGODB_URI);
+        yield mongoose_1.default.connect("mongodb+srv://test:test@cluster0.4cxnwra.mongodb.net/");
         console.log('Connected to MongoDB By Typegoose');
     }
     catch (error) {
