@@ -9,11 +9,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const uuid_1 = require("uuid");
+const users_models_1 = require("../models/users.models");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 exports.list = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const listuser = yield users_models_1.usersModel.find().exec();
         res.status(200).json({
             message: 'list -users',
-            data: 'list'
+            data: listuser
         });
     }
     catch (err) {
@@ -25,10 +30,19 @@ exports.list = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const posrData = req.body;
-        res.status(200).json({
+        const postData = req.body;
+        let user = yield users_models_1.usersModel.findOne({ username: postData.username });
+        if (user) {
+            return res.status(400).send("User Already exists");
+        }
+        const salt = yield bcrypt.genSalt(15);
+        postData.password = yield bcrypt.hash(postData.password, salt);
+        const id = (0, uuid_1.v4)();
+        postData.id = id;
+        const createUsers = yield new users_models_1.usersModel(postData).save();
+        res.status(201).json({
             message: 'create-users',
-            data: posrData
+            data: createUsers
         });
     }
     catch (err) {
@@ -40,7 +54,7 @@ exports.create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.update = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const id = req.params;
+        const { id } = req.params;
         res.status(200).json({
             message: `update-users-${id}`,
             data: id
@@ -55,7 +69,7 @@ exports.update = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.remove = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const id = req.params;
+        const { id } = req.params;
         res.status(200).json({
             message: `delete-users-${id}`,
             data: id
@@ -70,7 +84,7 @@ exports.remove = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.active = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const id = req.params;
+        const { id } = req.params;
         res.status(200).json({
             message: `active-users-${id}`,
             data: id
