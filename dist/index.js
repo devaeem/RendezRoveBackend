@@ -27,6 +27,5 @@ const options = {
     apis: ['./routes/*.ts'],
 };
 const swaggerSpec = swaggerJSDoc(options);
-module.exports = swaggerSpec;
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.listen(port, () => console.log(`Application is running on port ${port}`));
