@@ -6,7 +6,6 @@ const app: Express = express()
 const port: number = 5001
 
 const swaggerUi = require('swagger-ui-express');
-const swaggerSpec = require('./docs/docs');
 
 app.get('/', (req: Request, res: Response) => {
   res.send(
@@ -19,6 +18,24 @@ app.get('/test', (req: Request, res: Response) => {
     {data:'test'}
   )
 })
+const swaggerJSDoc = require('swagger-jsdoc');
+const swaggerDefinition = {
+    openapi: '3.0.0',
+    info: {
+      title: 'rendezrove API ',
+      version: '1.0.0',
+    },
+  };
+  
+  const options = {
+    swaggerDefinition,
+    // Paths to files containing OpenAPI definitions
+    apis: ['./routes/*.ts'],
+  };
+  
+  const swaggerSpec = swaggerJSDoc(options);
+
+  module.exports = swaggerSpec;
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
