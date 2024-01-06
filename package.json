@@ -5,11 +5,14 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.18.2",
-    "nodemon": "^3.0.2"
+    "nodemon": "^3.0.2",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui": "^5.10.5",
+    "swagger-ui-express": "^5.0.0"
   },
   "scripts": {
-    "dev:api": "nodemon src/app.ts",
-    "dev:prod": "nodemon dist/app.js",
+    "dev:api": "nodemon src/index.ts",
+    "dev:prod": "nodemon dist/index.js",
     "build": "rimraf dist && tsc",
     "ts.check": "tsc --project tsconfig.json",
     "add-build": "git add dist"
