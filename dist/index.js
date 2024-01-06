@@ -9,4 +9,7 @@ const port = 5001;
 app.get('/', (req, res) => {
     res.send('Hello rendezrovebackendservice + TypeScirpt!!');
 });
+app.get('/test', (req, res) => {
+    res.json({ data: 'test' });
+});
 app.listen(port, () => console.log(`Application is running on port ${port}`));

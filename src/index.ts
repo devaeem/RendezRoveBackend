@@ -11,4 +11,10 @@ app.get('/', (req: Request, res: Response) => {
   )
 })
 
+app.get('/test', (req: Request, res: Response) => {
+  res.json(
+    {data:'test'}
+  )
+})
+
 app.listen(port, () => console.log(`Application is running on port ${port}`))
