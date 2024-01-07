@@ -9,7 +9,6 @@ const jwt = require("jsonwebtoken");
 
 exports.list = async (req: Request, res: Response) => {
   try {
-
     const page: number = parseInt(req.query.page as string) || 1;
     const pageSize: number = parseInt(req.query.pageSize as string) || 10;
     const offset: number = (page - 1) * pageSize;
@@ -30,20 +29,20 @@ exports.list = async (req: Request, res: Response) => {
       .limit(pageSize)
       // .sort({ createdAt: sortOrder })
       .exec();
-    
 
     res.status(200).json({
-      data:{ rows: listuser || [],
-      total: total,
-      totalPages: totalPages,
-      page: page,
-      pageSize: pageSize,
-      pagingCounter: pagingCounter,
-      hasPrevPage: hasPrevPage,
-      hasNextPage: hasNextPage,
-      prevPage: prevPage,
-      nextPage: nextPage
-    },
+      data: {
+        rows: listuser || [],
+        total: total,
+        totalPages: totalPages,
+        page: page,
+        pageSize: pageSize,
+        pagingCounter: pagingCounter,
+        hasPrevPage: hasPrevPage,
+        hasNextPage: hasNextPage,
+        prevPage: prevPage,
+        nextPage: nextPage,
+      },
       code: 200,
       message: `sucess`,
     });
@@ -60,7 +59,8 @@ exports.create = async (req: Request, res: Response) => {
     const postData = req.body;
     const user = await usersModel
       .findOne({ username: postData.username })
-      .lean();
+      .lean()
+      .select("-password");
     if (user) {
       return res.status(400).send("User Already exists");
     }
@@ -92,11 +92,9 @@ exports.update = async (req: Request, res: Response) => {
     const salt = await bcrypt.genSalt(saltRounds);
     updateData.password = await bcrypt.hash(updateData.password, salt);
 
-    const userUpdate = await usersModel.findOneAndUpdate(
-      { id: id },
-      updateData,
-      { new: true }
-    );
+    const userUpdate = await usersModel
+      .findOneAndUpdate({ id: id }, updateData, { new: true })
+      .select("-password");
 
     res.status(200).json({
       // message: `update-users-${id}`,
@@ -122,11 +120,9 @@ exports.remove = async (req: Request, res: Response) => {
       updateActive.active = false;
     }
 
-    const userRemove = await usersModel.findOneAndUpdate(
-      { id: id },
-      updateActive,
-      { new: true }
-    );
+    const userRemove = await usersModel
+      .findOneAndUpdate({ id: id }, updateActive, { new: true })
+      .select("-password");
     res.status(200).json({
       data: userRemove,
       code: 200,
@@ -151,11 +147,9 @@ exports.active = async (req: Request, res: Response) => {
       updateActive.status = status.BANNED;
     }
 
-    const userActive = await usersModel.findOneAndUpdate(
-      { id: id },
-      updateActive,
-      { new: true }
-    );
+    const userActive = await usersModel
+      .findOneAndUpdate({ id: id }, updateActive, { new: true })
+      .select("-password");
     res.status(200).json({
       data: userActive,
       code: 200,

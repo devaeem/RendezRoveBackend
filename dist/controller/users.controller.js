@@ -35,7 +35,8 @@ exports.list = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             // .sort({ createdAt: sortOrder })
             .exec();
         res.status(200).json({
-            data: { rows: listuser || [],
+            data: {
+                rows: listuser || [],
                 total: total,
                 totalPages: totalPages,
                 page: page,
@@ -44,7 +45,7 @@ exports.list = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 hasPrevPage: hasPrevPage,
                 hasNextPage: hasNextPage,
                 prevPage: prevPage,
-                nextPage: nextPage
+                nextPage: nextPage,
             },
             code: 200,
             message: `sucess`,
@@ -62,7 +63,8 @@ exports.create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const postData = req.body;
         const user = yield users_models_1.usersModel
             .findOne({ username: postData.username })
-            .lean();
+            .lean()
+            .select("-password");
         if (user) {
             return res.status(400).send("User Already exists");
         }
@@ -92,7 +94,9 @@ exports.update = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const saltRounds = 10;
         const salt = yield bcrypt.genSalt(saltRounds);
         updateData.password = yield bcrypt.hash(updateData.password, salt);
-        const userUpdate = yield users_models_1.usersModel.findOneAndUpdate({ id: id }, updateData, { new: true });
+        const userUpdate = yield users_models_1.usersModel
+            .findOneAndUpdate({ id: id }, updateData, { new: true })
+            .select("-password");
         res.status(200).json({
             // message: `update-users-${id}`,
             data: updateData,
@@ -117,7 +121,9 @@ exports.remove = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         else {
             updateActive.active = false;
         }
-        const userRemove = yield users_models_1.usersModel.findOneAndUpdate({ id: id }, updateActive, { new: true });
+        const userRemove = yield users_models_1.usersModel
+            .findOneAndUpdate({ id: id }, updateActive, { new: true })
+            .select("-password");
         res.status(200).json({
             data: userRemove,
             code: 200,
@@ -141,7 +147,9 @@ exports.active = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if (updateActive.status == "Banned") {
             updateActive.status = user_interface_1.status.BANNED;
         }
-        const userActive = yield users_models_1.usersModel.findOneAndUpdate({ id: id }, updateActive, { new: true });
+        const userActive = yield users_models_1.usersModel
+            .findOneAndUpdate({ id: id }, updateActive, { new: true })
+            .select("-password");
         res.status(200).json({
             data: userActive,
             code: 200,
