@@ -9,11 +9,14 @@ const schema = new mongoose_1.Schema({
     username: { type: String, required: true },
     password: { type: String, required: true },
     email: { type: String, required: true },
+    firstname: { type: String, required: true },
+    lastname: { type: String, required: true },
+    fullname: { type: String },
     phone: { type: String },
     age: { type: Number },
     status: { type: String, default: user_interface_1.status.PENDING },
     role: { type: String, default: user_interface_1.role.USER },
-    active: { type: Boolean, default: false },
+    active: { type: Boolean, default: true },
 }, { timestamps: true });
 const usersModel = typegoose_1.mongoose.model('users', schema);
 exports.usersModel = usersModel;

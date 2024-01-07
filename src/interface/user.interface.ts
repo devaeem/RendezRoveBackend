@@ -3,11 +3,14 @@ export interface user {
     
 } 
 
-export interface Users {
+export interface Users  {
     id: string;
     username: string;
     password: string;
     email: string;
+    firstname: string;
+    lastname: string;
+    fullname?: string;
     phone?: string;
     age?: string;
     role?:string;
@@ -25,4 +28,8 @@ export interface Users {
   export enum role {
     ADMIN = 'admin',
     USER = 'user',
+  }
+  type SortOrder = -1 | 1;
+  export interface SortParams {
+    [key: string]: SortOrder;
   }

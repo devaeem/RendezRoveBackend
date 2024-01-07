@@ -1,5 +1,6 @@
 import express from "express";
 const router = express.Router();
+import { validatePagination } from '../controller/validatePagination';
 
 const {
     list,
@@ -10,10 +11,10 @@ const {
    
  } = require("../controller/users.controller");
 
- router.get("/users",  list);
+ router.get("/users",validatePagination,list);
  router.post("/users",  create);
  router.put("/users/:id",  update);
- router.put("/user/:id",  remove);
+ router.delete("/user/:id",  remove);
  router.put("/activeusers/:id", active);
 
  module.exports = router;
